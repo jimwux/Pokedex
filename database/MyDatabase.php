@@ -12,10 +12,6 @@ class MyDatabase
             $config['user'],
             $config['pass'],
             $config['db']);
-
-        if ($this->conection->select_db($config['db']) === false) {
-            die("Error al seleccionar la base de datos: " . $this->conection->error);
-        }
     }
 
     public function __destruct()
@@ -29,8 +25,15 @@ class MyDatabase
 
     public function query($sql)
     {
-        $datos = $this->conection->query($sql);
-        return $datos->fetch_all(MYSQLI_ASSOC);
+        $resultado = $this->conection->query($sql);
+
+        if ($resultado === true) { // INSERT, UPDATE o DELETE
+            return true;
+        } elseif ($resultado instanceof mysqli_result) { // SELECT
+            return $resultado->fetch_all(MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
     }
 
 }
