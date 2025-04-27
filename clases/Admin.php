@@ -20,6 +20,7 @@ class Admin
         $inyeccion = $this->conexion->prepare($query);
         $inyeccion->bind_param("issss", $pokemon->numero_identificador, $pokemon->nombre, $pokemon->tipo, $pokemon->descripcion, $pokemon->imagen);
 
+
         if ($inyeccion->execute()) {
             return "Pokemon agregado correctamente";
         } else {
@@ -31,7 +32,7 @@ class Admin
     // OBTIENE
     public function obtenerPokemon($id)
     {
-        $query = "SELECT * FROM pokemon WHERE numero_identificador = ? LIMIT 1";
+        $query = "SELECT * FROM pokemon WHERE id = ? LIMIT 1";
 
         $inyeccion = $this->conexion->prepare($query);
         $inyeccion->bind_param("i", $id);
@@ -44,11 +45,47 @@ class Admin
     // ACTUALIZA
     public function actualizarPokemon($id, $pokemonActualizado, $imagenNueva)
     {
-        $numeroIdentificadorDB = $pokemonActualizado["numeroIdentificador"] ?? "";
+        $numeroIdentificadorDB = intval($pokemonActualizado["numeroIdentificador"] ?? "");
         $nombreDB = $pokemonActualizado["nombre"] ?? "";
         $tipoDB = $pokemonActualizado["tipo"] ?? "";
         $descripcionDB = $pokemonActualizado["descripcion"] ?? "";
         $imagenDB = $pokemonActualizado["imagen"] ?? "";
+
+//        echo "<pre>";
+//        var_dump($pokemonActualizado);
+//        var_dump($id);
+//        var_dump($imagenNueva);
+//        echo "</pre>";
+
+//        array(5) {
+//        ["numeroIdentificador"]=>
+//  string(1) "2"
+//        ["nombre"]=>
+//  string(10) "Ivysaur AC"
+//        ["tipo"]=>
+//  string(6) "hierba"
+//        ["descripcion"]=>
+//  string(27) "La evolución de Bulbasaur."
+//        ["imagen"]=>
+//  string(11) "ivysaur.png"
+//}
+//int(2)
+//NULL
+
+//        array(5) {
+//        ["numeroIdentificador"]=>
+//  string(2) "10"
+//        ["nombre"]=>
+//  string(9) "Sergio AC"
+//        ["tipo"]=>
+//  string(4) "agua"
+//        ["descripcion"]=>
+//  string(14) "Sergio on Fire"
+//        ["imagen"]=>
+//  string(36) "d1f497d4a80c4a34c6f0ded7db19535a.jpg"
+//}
+//int(10)
+//NULL
 
         if ($imagenNueva != null) {
 //            echo "Borro la imagen de la carpeta, genero un nuevo nombre, guardo la imagen en la carpeta y lo subo a la BD";
@@ -68,10 +105,7 @@ class Admin
             } else {
                 return "Error al subir la nueva imagen.";
             }
-
-
         }
-
 
         $query = "UPDATE pokemon SET
                   numero_identificador = ?,
@@ -82,7 +116,7 @@ class Admin
                   WHERE id = ?";
 
         $inyeccion = $this->conexion->prepare($query);
-        $inyeccion->bind_param("issssi",
+        $inyeccion->bind_param("sssssi",
             $numeroIdentificadorDB,
             $nombreDB,
             $tipoDB,
@@ -101,7 +135,7 @@ class Admin
     public function eliminarPokemon($id)
     {
 
-        $query = "DELETE FROM pokemon WHERE numero_identificador = ?";
+        $query = "DELETE FROM pokemon WHERE id = ?";
 
         $inyeccion = $this->conexion->prepare($query);
         $inyeccion->bind_param("i", $id);

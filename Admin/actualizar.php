@@ -23,6 +23,7 @@ if (isset($_GET["id"])) {
     $pokemonObtenido = $admin->obtenerPokemon($id);
 
     if (!$pokemonObtenido) {
+        header("Location: ../index.php");
         $mensaje = "El pokemon no fue encontrado. <a href='../index.php'>Volver a inicio</a>";
     } else {
         $numeroIdentificador = $pokemonObtenido["numero_identificador"];
@@ -50,17 +51,16 @@ if (isset($_GET["id"])) {
 
             if (empty($_FILES["imagen"]["name"])) {
                 // En caso de que se deje la misma imagen
-                $resultado = $admin->actualizarPokemon($id, $pokemonActualizado, null);
+                $mensaje = $admin->actualizarPokemon($id, $pokemonActualizado, null);
             } else {
                 // En caso de se cambie la imagen
-                $resultado = $admin->actualizarPokemon($id, $pokemonActualizado, $_FILES);
+                $mensaje = $admin->actualizarPokemon($id, $pokemonActualizado, $_FILES);
             }
-
-            $mensaje = $resultado;
+            header("Location: ../index.php");
         }
     }
 } else {
-    header("Location: /");
+    header("Location: ../index.php");
     exit();
 }
 
@@ -163,27 +163,11 @@ if (isset($_GET["id"])) {
                 <div class="form-group">
                     <label for="tipo">Tipo de Pokémon:</label>
                     <select class="form-control" id="tipo" name="tipo">
-                        <option value="normal" <?php if ($tipo === 'normal') echo 'selected'; ?>>Normal</option>
                         <option value="hierba" <?php if ($tipo === 'hierba') echo 'selected'; ?>>Hierba</option>
                         <option value="fuego" <?php if ($tipo === 'fuego') echo 'selected'; ?>>Fuego</option>
                         <option value="agua" <?php if ($tipo === 'agua') echo 'selected'; ?>>Agua</option>
-                        <option value="planta" <?php if ($tipo === 'planta') echo 'selected'; ?>>Planta</option>
                         <option value="eléctrico" <?php if ($tipo === 'eléctrico') echo 'selected'; ?>>Eléctrico
                         </option>
-                        <option value="hielo" <?php if ($tipo === 'hielo') echo 'selected'; ?>>Hielo</option>
-                        <option value="lucha" <?php if ($tipo === 'lucha') echo 'selected'; ?>>Lucha</option>
-                        <option value="veneno" <?php if ($tipo === 'veneno') echo 'selected'; ?>>Veneno</option>
-                        <option value="tierra" <?php if ($tipo === 'tierra') echo 'selected'; ?>>Tierra</option>
-                        <option value="volador" <?php if ($tipo === 'volador') echo 'selected'; ?>>Volador</option>
-                        <option value="psíquico" <?php if ($tipo === 'psíquico') echo 'selected'; ?>>Psíquico</option>
-                        <option value="bicho" <?php if ($tipo === 'bicho') echo 'selected'; ?>>Bicho</option>
-                        <option value="roca" <?php if ($tipo === 'roca') echo 'selected'; ?>>Roca</option>
-                        <option value="fantasma" <?php if ($tipo === 'fantasma') echo 'selected'; ?>>Fantasma</option>
-                        <option value="dragón" <?php if ($tipo === 'dragón') echo 'selected'; ?>>Dragón</option>
-                        <option value="siniestro" <?php if ($tipo === 'siniestro') echo 'selected'; ?>>Siniestro
-                        </option>
-                        <option value="acero" <?php if ($tipo === 'acero') echo 'selected'; ?>>Acero</option>
-                        <option value="hada" <?php if ($tipo === 'hada') echo 'selected'; ?>>Hada</option>
                     </select>
                 </div>
 

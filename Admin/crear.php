@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $verificarNumeroIdentificador = $admin->obtenerPokemon($numeroIdentificador);
 
-    if (isset($verificarNumeroIdentificador["numero_identificador"]) == $numeroIdentificador) {
+    if (isset($verificarNumeroIdentificador["numero_identificador"]) == $numeroIdentificador && $numeroIdentificador != "") {
         $errores[] = "El Pókemon con ese numero de identificador ya existe";
     }
 
@@ -49,7 +49,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
                 $admin->agregarPokemon($pokemon);
-                header("Location: ../index.php");
             }
         }
     }
@@ -156,25 +155,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="form-group">
                     <label for="tipo">Tipo de Pokémon:</label>
                     <select class="form-control" id="tipo" name="tipo">
-                        <option value="normal">Normal</option>
                         <option value="hierba">Hierba</option>
                         <option value="fuego">Fuego</option>
                         <option value="agua">Agua</option>
-                        <option value="planta">Planta</option>
                         <option value="eléctrico">Eléctrico</option>
-                        <option value="hielo">Hielo</option>
-                        <option value="lucha">Lucha</option>
-                        <option value="veneno">Veneno</option>
-                        <option value="tierra">Tierra</option>
-                        <option value="volador">Volador</option>
-                        <option value="psíquico">Psíquico</option>
-                        <option value="bicho">Bicho</option>
-                        <option value="roca">Roca</option>
-                        <option value="fantasma">Fantasma</option>
-                        <option value="dragón">Dragón</option>
-                        <option value="siniestro">Siniestro</option>
-                        <option value="acero">Acero</option>
-                        <option value="hada">Hada</option>
                     </select>
                 </div>
 
