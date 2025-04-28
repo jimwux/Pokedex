@@ -19,6 +19,10 @@ class MyDatabase
         $this->conection->close();
     }
 
+    public function getConection(){
+        return $this->conection;
+    }
+
     public function query($sql)
     {
         $resultado = $this->conection->query($sql);
