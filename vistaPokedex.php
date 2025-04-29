@@ -28,7 +28,7 @@
     <div class="pokemon-information">
         <h2>Descripción</h2>
         <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Odio quos cum hic perferendis quis suscipit eius quae vitae repudiandae repellendus dolorem, itaque modi consequuntur animi.</p>
-        <footer class="pokemon-type">tipo/s : <img class="type-img" src="img/tipos/tipo-fuego.png" alt=""> <img class="type-img" src="img/tipos/tipo-volador.png" alt=""></footer>
+        <footer class="pokemon-type">Tipo/s : <img class="type-img" src="img/tipos/tipo-fuego.png" alt=""> <img class="type-img" src="img/tipos/tipo-volador.png" alt=""></footer>
     </div>
 </div>
 
