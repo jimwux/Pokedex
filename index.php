@@ -1,5 +1,5 @@
 <?php
-include_once 'database/MyDatabase.php';
+require_once 'database/MyDatabase.php';
 
 $db = new MyDatabase();
 $busqueda = '';
@@ -18,8 +18,8 @@ $pokemones = $db->query($query);
 <html>
 <body>
 
-<?php include './head.php'; ?>
-<?php include './navbar.php'; ?>
+<?php require './head.php'; ?>
+<?php require './navbar.php'; ?>
 
 <!-- Dump de la sesión para ver contenido -->
 <?php var_dump($_SESSION); ?>
@@ -57,7 +57,7 @@ if (!count($pokemones) > 0) {
 }
 ?>
 
-<?php include './footer.php'; ?>
+<?php require './footer.php'; ?>
 
 </body>
 </html>
