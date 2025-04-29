@@ -1,32 +1,18 @@
-
 <?php
-// Conexión a la base de datos
-$conexion = new mysqli('localhost', 'root', '', 'pokedex');
+include_once 'database/MyDatabase.php';
 
-if ($conexion->connect_error) {
-    die('Error de conexión: ' . $conexion->connect_error);
-}
-
-// Inicializamos variables
-$pokemones = [];
+$db = new MyDatabase();
 $busqueda = '';
+$pokemones = [];
 
-// Si enviaron el formulario de búsqueda
 if (isset($_GET['busqueda'])) {
     $busqueda = $_GET['busqueda'];
-    $query = "SELECT * FROM pokemon WHERE nombre LIKE '$busqueda%'";
+    $query = "SELECT * FROM pokemon WHERE nombre LIKE '%$busqueda%' OR numero_identificador = '$busqueda'";
 } else {
-    // Si no buscaron nada, mostrar todos
     $query = "SELECT * FROM pokemon";
 }
 
-$resultado = $conexion->query($query);
-
-if ($resultado && $resultado->num_rows > 0) {
-    while ($fila = $resultado->fetch_assoc()) {
-        $pokemones[] = $fila;
-    }
-}
+$pokemones = $db->query($query);
 ?>
 
 <html>
@@ -43,14 +29,6 @@ if ($resultado && $resultado->num_rows > 0) {
 
 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
 
-    <form action="./Admin/crear.php" method="GET" style="margin: 10;">
-        <button type="submit">Agregar Nuevo Pokemon</button>
-    </form>
-
-    <form action="./Admin/eliminar.php" method="GET" style="margin: 10;">
-        <button type="submit">Eliminar Pokemon</button>
-    </form>
-
     <form method="GET" action="index.php" style="display: flex; align-items: right; gap: 5px; margin: 10;">
         <input type="text" name="busqueda" placeholder="Buscar Pokémon..." value="<?php echo $busqueda; ?>">
         <button type="submit">Buscar</button>
@@ -59,18 +37,23 @@ if ($resultado && $resultado->num_rows > 0) {
 </div>
 <!-- Listado de Pokemones o mensaje -->
 <?php
-if (count($pokemones) > 0) {
-    foreach ($pokemones as $pokemon) {
-        echo "<div style='border:1px solid #ccc; padding:10px; margin-bottom:10px;'>";
-        echo "<h2>" . $pokemon['nombre'] . "</h2>";
-        echo "</div>";
+foreach ($pokemones as $pokemon) {
+  echo "<div class='card'>";
+  echo "<img src='img/{$pokemon['imagen']}' alt='{$pokemon['nombre']}' style='width:100px; height:100px;'><br>";
+  echo "<strong>{$pokemon['nombre']}</strong><br>";
+  if (isset($_SESSION['usuario_id'])) {
+    echo "<a href='Admin/eliminar.php?id={$pokemon['id']}' style='color: red; margin-right: 10px;'>Eliminar</a>";
+    echo "<a href='Admin/actualizar.php?id={$pokemon['id']}'>Modificar</a>";
     }
+  echo "</div>";
+}
+if (!count($pokemones) > 0) {
+  
+  if ($busqueda != '') {
+    echo "<div style='color:red; font-weight:bold;'>No se encontraron pokémon que coincidan en nombre o numero identificador con: '$busqueda'.</div>";
 } else {
-    if ($busqueda != '') {
-        echo "<div style='color:red; font-weight:bold;'>No se encontraron pokémon que coincidan con '$busqueda'.</div>";
-    } else {
-        echo "<div style='color:red; font-weight:bold;'>No hay pokémon registrados.</div>";
-    }
+    echo "<div style='color:red; font-weight:bold;'>No hay pokémon registrados.</div>";
+}
 }
 ?>
 
@@ -78,3 +61,24 @@ if (count($pokemones) > 0) {
 
 </body>
 </html>
+
+<!-- Jime despues cambia el estilo como te guste -->
+<style>
+    .card {
+        border: 1px solid #ccc;
+        padding: 10px;
+        display: inline-block;
+        margin: 10px;
+        text-align: center;
+        border-radius: 5px;
+    }
+
+    .card a {
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .card a:hover {
+        text-decoration: underline;
+    }
+</style>
