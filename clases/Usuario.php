@@ -46,7 +46,7 @@ class Usuario
         }
 
         // Insertar nuevo usuario
-        $sql = "INSERT INTO usuario (username, email, password) 
+        $sql = "INSERT INTO usuario (nombre, email, password) 
             VALUES ('$username', '$email', '$password_hash')";
         $resultado = $db->query($sql);
 
