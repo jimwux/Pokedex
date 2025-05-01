@@ -5,7 +5,7 @@ session_start();
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm px-3 poke-nav bg-gris-oscuro">
     <div class="container-fluid">
         <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-            <img src="img/assets/pokeball.png" alt="Logo" width="40" height="40" loading="lazy">
+            <img src="/Pokedex/img/assets/pokeball.png" alt="Logo" width="40" height="40" loading="lazy">
             <span class="fs-4 fw-bold">PokeWeb</span>
         </a>
 

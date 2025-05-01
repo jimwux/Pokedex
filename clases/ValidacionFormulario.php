@@ -10,12 +10,11 @@ class ValidacionFormulario
 
     public function obtenerErrores($campos, $archivos)
     {
-
         $errores = [];
 
         $numeroIdentificador = $campos["numeroIdentificador"];
         $nombre = $campos["nombre"];
-        $tipo = $campos["tipo"];
+        $tipo = $campos["tipo"] ?? [];
         $descripcion = $campos["descripcion"];
 
         if ($numeroIdentificador == "") {
@@ -26,15 +25,19 @@ class ValidacionFormulario
             $errores[] = "El nombre del Pókemon es obligatorio";
         }
 
-        if ($tipo == "") {
-            $errores[] = "El tipo de Pókemon es obligatorio";
+        if (empty($tipo)) {
+            $errores[] = "El tipo de Pókemon es obligatorio, elige por lo menos uno";
+        }
+
+        if (count($tipo) > 2) {
+            $errores[] = "Un Pokemón no puede tener más de dos tipos, Trola";
         }
 
         if ($descripcion == "") {
             $errores[] = "La descripción es obligatoria";
         }
 
-        if($archivos == "" || $archivos == UPLOAD_ERR_NO_FILE ){
+        if ($archivos == "" || $archivos == UPLOAD_ERR_NO_FILE) {
             $errores[] = "La imagen del pokemon es obligatoria";
         }
 

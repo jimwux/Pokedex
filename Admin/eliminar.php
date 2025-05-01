@@ -1,7 +1,7 @@
 <?php
 
-include_once "../database/MyDatabase.php";
-include_once "../clases/Admin.php";
+require_once "../database/MyDatabase.php";
+require_once "../clases/Admin.php";
 
 if (isset($_GET["id"])) {
     $db = new MyDatabase();
