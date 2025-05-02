@@ -1,8 +1,8 @@
 
 <?php include './head.php'; ?>
 <?php include './navbar.php';
-// require_once ($_SERVER['DOCUMENT_ROOT']. '/database/MyDatabase.php');
-require './database/MyDatabase.php';
+require_once ($_SERVER['DOCUMENT_ROOT']. "/Pokedex/database/MyDatabase.php");
+// require './database/MyDatabase.php';
 $db = new MyDatabase();
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
