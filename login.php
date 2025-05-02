@@ -5,7 +5,7 @@ if (isset($_SESSION['usuario_id'])) {
     exit;
 }
 
-include './clases/Usuario.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/clases/Usuario.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['email'], $_POST['password'])) {
@@ -30,17 +30,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-<?php include './head.php'; ?>
-<?php include './navbar.php'; ?>
+<?php require $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/head.php'; ?>
+<?php require $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/navbar.php'; ?>
 
-<section class="py-3 py-md-5 py-xl-8 session" id="login">
+<section class="py-3 py-md-5 py-xl-8 tamanio-pantalla session" id="login">
     <div class="container">
         <div class="row gy-4 align-items-center">
             <div class="col-12 col-md-6 col-xl-7">
                 <div class="d-flex justify-content-center text-light">
                     <div class="col-12 col-xl-9">
                         <div class="logotipo">
-                            <img loading="lazy" src="img/assets/pokeball.png" width="140" height="140" alt="BootstrapBrain Logo">
+                            <img loading="lazy" src="img/assets/pokeball.png" width="140" height="140" alt="Pokeweb">
                             <h1 class="display-1 m-4">PokeWeb</h1>
                         </div>
                         <hr class="border-primary-subtle mb-4">
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         </div>
                                     <?php endif; ?>
 
-                                    <p>No tenés una cuenta? <a href="register.php">Registrate</a></p>
+                                    <p>No tenés una cuenta? <a href="./register.php">Registrate</a></p>
                                 </div>
                             </div>
                         </div>
@@ -108,4 +108,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </section>
 <div class="session-margin"></div>
 
-<?php include './footer.php'; ?>
+<?php require $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/footer.php'; ?>

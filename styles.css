@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
 .logotipo {
     display: flex;
     flex-direction: row;
@@ -5,10 +11,6 @@
 }
 
 .session {
-    flex: 1;
-    position: absolute;
-    height: 100vh;
-    width: 100%;
     display: flex;
     align-items: center;
     overflow: hidden;
@@ -29,4 +31,105 @@
 
 .session-margin {
     height: 100vh;
+}
+
+.tamanio-pantalla {
+    flex: 1;
+    position: absolute;
+    height: 100vh;
+    width: 100%;
+}
+
+.id-circle {
+    position: absolute;
+    top: -18px; /* ajusta según el tamaño del círculo */
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+#listado {
+    flex: 1;
+    width: 100%;
+    position: relative; /* no absolute */
+    padding: 1rem;
+}
+
+.search-bar {
+    width: 100%;
+    margin: auto;
+}
+
+.search-bar .input-group {
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+}
+
+.search-bar .form-control {
+    border: none;
+    padding-left: 20px;
+    height: 42px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.search-bar .btn {
+    border: none;
+    padding: 0 20px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    line-height: 1;
+    box-sizing: border-box;
+}
+
+.agregar-pokemon {
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    font-size: 16px;
+    box-sizing: border-box;
+    border-radius: 30px;
+}
+
+.pokemon-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pokemon-card:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.nombre-pokemon-card {
+    font-size: clamp(0.9rem, 2vw, 1.3rem);
+    font-weight: 600;
+    margin-bottom: 0;
+    margin-top: 0.5em;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
 }
