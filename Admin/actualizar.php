@@ -6,6 +6,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/Pokedex/clases/Admin.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/Pokedex/clases/ValidacionFormulario.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/clases/Admin.php';
 
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 $numeroIdentificador = "";
 $nombre = "";
 $tipo = "";
@@ -66,11 +70,12 @@ if (isset($_GET["id"])) {
             if (empty($_FILES["imagen"]["name"])) {
                 // En caso de que se deje la misma imagen
                 $mensaje = $admin->actualizarPokemon($id, $pokemonActualizado, null);
+                header("Location: ../index.php");
             } else {
                 // En caso de se cambie la imagen
+                header("Location: ../index.php");
                 $mensaje = $admin->actualizarPokemon($id, $pokemonActualizado, $_FILES);
             }
-            header("Location: ../index.php");
         }
     }
 } else {

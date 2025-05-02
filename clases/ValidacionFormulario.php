@@ -17,6 +17,12 @@ class ValidacionFormulario
         $tipo = $campos["tipo"] ?? [];
         $descripcion = $campos["descripcion"];
 
+        echo "<pre>";
+        var_dump($campos);
+        echo "</pre>";
+        echo empty($tipo) . "<br>";
+        exit;
+
         if ($numeroIdentificador == "") {
             $errores[] = "El numero de identificador es obligatorio";
         }
@@ -25,7 +31,7 @@ class ValidacionFormulario
             $errores[] = "El nombre del Pókemon es obligatorio";
         }
 
-        if (empty($tipo)) {
+        if (empty($tipo) == 1) {
             $errores[] = "El tipo de Pókemon es obligatorio, elige por lo menos uno";
         }
 

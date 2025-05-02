@@ -6,6 +6,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/Pokedex/clases/Admin.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/Pokedex/clases/ValidacionFormulario.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/clases/Admin.php';
 
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 $numeroIdentificador = $_POST["numeroIdentificador"] ?? "";
 $nombre = $_POST["nombre"] ?? "";
 $tipo = $_POST["tipo"] ?? "";
@@ -19,8 +23,6 @@ $errores = [];
 
 // Obtener tipos de Pokemons
 $tiposPokemon = $admin->obtenerTiposPokemon();
-
-//$campos = [$numeroIdentificador, $nombre, $descripcion, $tipo];
 
 // Verifica si el metodo es POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -54,11 +56,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (move_uploaded_file($imagenTmp, $directorioImagenes)) {
                 $pokemon = new Pokemon($numeroIdentificador, $nombre, $descripcion, $nombreImagen);
 
-
                 $admin->agregarPokemon($pokemon, $tipo);
+
+                header("Location: ../index.php");
+            } else {
+                Mensaje::guardar("Error al subir imagen", "danger");
+                header("Location: ../index.php");
             }
+
+
         }
     }
+
 }
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/head.php';

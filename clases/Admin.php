@@ -1,5 +1,7 @@
 <?php
 
+require_once $_SERVER['DOCUMENT_ROOT'] . "/Pokedex/clases/Mensaje.php";
+
 class Admin
 {
 
@@ -21,7 +23,8 @@ class Admin
         $inyeccion->bind_param("isss", $pokemon->numero_identificador, $pokemon->nombre, $pokemon->descripcion, $pokemon->imagen);
 
         if (!$inyeccion->execute()) {
-            return "Error al agregar el Pókemon";
+            Mensaje::guardar("Error al agregar el Pókemon", "danger");
+            return false;
         }
 
         // Agrega la información a la tabla pokemon_tipo (N a N)
@@ -35,11 +38,12 @@ class Admin
                 $tipoId = intval($tipo);
                 $inyeccion2->bind_param("ii", $pokemonId, $tipoId);
                 if (!$inyeccion2->execute()) {
-                    return "Error al agregar el Tipo al Pokemon";
+                    Mensaje::guardar("Error al agregar el Tipo al Pokemon", "danger");
+                    return false;
                 }
             }
         }
-        return "Pókemon agregado correctamente";
+        Mensaje::guardar("Pókemon agregado correctamente", "success");
     }
 
     // OBTIENE
@@ -124,10 +128,19 @@ class Admin
             $id
         );
 
+        // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        // FALTA ACTUALIZAR LA TABLA N A N EN CASO DE QUE SE CAMBIE, HACER LA VERIFICACION Y GUARDARLO EN LA BD
+        // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        $queryTipos = "UPDATE pokemon_tipo pt
+                       JOIN pokemon p ON p.numero_identificador = pt.pokemon_id 
+                        ";
+
         if ($inyeccion->execute()) {
-            return "Pokemon actualizado correctamente";
+            Mensaje::guardar("Pokemon actualizado correctamente", "success");
+            return true;
         } else {
-            return "Error al evolucionar el Pokemon :(: " . $inyeccion->error;
+            Mensaje::guardar("Error al evolucionar el Pokemon :(: " . $inyeccion->error, "danger");
+            return false;
         }
     }
 
@@ -140,9 +153,11 @@ class Admin
         $inyeccion->bind_param("i", $id);
 
         if ($inyeccion->execute()) {
-            return "Pokemon eliminado correctamente";
+            Mensaje::guardar("Pokemon eliminado correctamente", "success");
+            return true;
         } else {
-            return "Error al eliminar la Pókemon";
+            Mensaje::guardar("Error al eliminar la Pókemon");
+            return false;
         }
 
     }

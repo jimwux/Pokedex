@@ -1,5 +1,10 @@
 <?php
 require_once 'database/MyDatabase.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/clases/Mensaje.php';
+
+if(session_status() == PHP_SESSION_NONE){
+    session_start();
+}
 
 $db = new MyDatabase();
 $busqueda = '';
@@ -22,10 +27,12 @@ $pokemones = $db->query($query);
 <?php require './navbar.php'; ?>
 
 <!-- Dump de la sesión para ver contenido -->
-<?php var_dump($_SESSION); ?>
+<?php //var_dump($_SESSION); ?>
 
 <!-- Título principal -->
 <h1>Listado de Pokemones</h1>
+
+<?php Mensaje::mostrar(); ?>
 
 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
 
@@ -48,7 +55,7 @@ foreach ($pokemones as $pokemon) {
   echo "</div>";
 }
 if (!count($pokemones) > 0) {
-  
+
   if ($busqueda != '') {
     echo "<div style='color:red; font-weight:bold;'>No se encontraron pokémon que coincidan en nombre o numero identificador con: '$busqueda'.</div>";
 } else {
