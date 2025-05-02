@@ -31,9 +31,11 @@ $pokemones = $db->query($query);
 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
     <div class="container-fluid mb-4 px-5">
         <div style="display: flex; align-items: center; gap: 10px;" class="d-flex flex-column flex-md-row align-items-stretch gap-2">
-            <a href="./Admin/crear.php" class="agregar-pokemon btn btn-danger rounded-pill col-md-2" style="min-width: 250px;">
-                <i class="fas fa-plus me-2"></i> Agregar Pokémon
-            </a>
+            <?php if (isset($_SESSION['usuario_id'])): ?>
+                <a href="./Admin/crear.php" class="agregar-pokemon btn btn-danger rounded-pill" style="min-width: 200px;">
+                    <i class="fas fa-plus me-2"></i> Agregar Pokémon
+                </a>
+            <?php endif; ?>
             <form method="GET" action="index.php" style="flex-grow: 1;" class="flex-grow-1">
                 <div class="search-bar">
                     <div class="input-group">
