@@ -1,5 +1,6 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/database/MyDatabase.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/clases/Mensaje.php';
 
 $db = new MyDatabase();
 $busqueda = '';
@@ -39,14 +40,18 @@ $pokemones = $db->query($query);
 <?php require $_SERVER['DOCUMENT_ROOT'] .  '/Pokedex/navbar.php'; ?>
 
 <!-- Dump de la sesión para ver contenido -->
-<?php var_dump($_SESSION); ?>
+<?php //var_dump($_SESSION); ?>
 <main class="bg-light">
 <section class="pt-3 pt-md-5 pt-xl-8" id="listado">
+
+
 <!-- Título principal -->
 <div class="logotipo d-flex justify-content-center align-items-center text-center my-2">
     <img loading="lazy" src="img/assets/pokeball.png" width="80" height="80" alt="Listado pokemon">
     <h1 class="display-4 m-4">Listado de Pokémon</h1>
 </div>
+
+<?php Mensaje::mostrar(); ?>
 
 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
     <div class="container-fluid mb-4 px-5">

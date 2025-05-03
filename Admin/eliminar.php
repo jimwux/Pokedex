@@ -1,7 +1,13 @@
 <?php
 
-include_once "../database/MyDatabase.php";
-include_once "../clases/Admin.php";
+require_once "../database/MyDatabase.php";
+require_once "../clases/Admin.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/Pokedex/clases/Mensaje.php";
+
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: /Pokedex/index.php");
+    exit;
+}
 
 if (isset($_GET["id"])) {
     $db = new MyDatabase();
@@ -28,6 +34,8 @@ if (isset($_GET["id"])) {
         unlink($rutaPokemon);
         header("location: ../index.php");
     }
-    return $resultado; // Retorna un mensaje, ya sea exitoso o de error
+
+    Mensaje::guardar($resultado, "success");
+    return true; // Retorna un mensaje, ya sea exitoso o de error
 
 }

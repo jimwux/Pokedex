@@ -19,10 +19,6 @@ $sqlTipos = "SELECT t.nombre FROM tipo t
 $tipos = $db->query($sqlTipos);
 ?>
 
-/*var_dump($_SESSION)*/
-
-?>
-
 <section class="py-3 py-md-5 py-xl-8 tamanio-pantalla" id="vista-detalle">
 
     <a class="btn btn-secondary mt-3 ms-4 mb-2 rounded-pill shadow-sm" href="./index.php">❮ Volver atrás</a>

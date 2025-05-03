@@ -118,3 +118,62 @@ body {
     margin-bottom: 0;
     margin-top: 0.5em;
 }
+
+
+
+/* Estilos de formulario para actualizar.php y crear.php*/
+
+
+.pokemon-form-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+}
+
+.pokemon-header {
+    color: #ffcb05;
+    text-shadow: 2px 2px #3b4cca;
+    margin-bottom: 30px;
+}
+
+.form-group label {
+    color: #3b4cca;
+    font-weight: bold;
+}
+
+.form-control {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-control:focus {
+    border-color: #ffcb05;
+    box-shadow: 0 0 0 0.2rem rgba(255, 203, 5, 0.25);
+}
+
+.btn-primary {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 10px 20px;
+}
+
+.btn-primary:hover {
+    background-color: #45a049;
+    border-color: #45a049;
+}
+
+.form-group select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%233b4cca" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position-x: 95%;
+    background-position-y: 50%;
+    padding-right: 25px;
+}

@@ -1,22 +1,34 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/head.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/navbar.php';
 
-include_once "../clases/Pokemon.php";
-include_once "../database/MyDatabase.php";
-include_once "../clases/Admin.php";
-include_once "../clases/ValidacionFormulario.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/Pokedex/clases/Pokemon.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/Pokedex/database/MyDatabase.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/Pokedex/clases/Admin.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/Pokedex/clases/ValidacionFormulario.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/clases/Admin.php';
+
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: /Pokedex/index.php");
+    exit;
+}
 
 $numeroIdentificador = $_POST["numeroIdentificador"] ?? "";
 $nombre = $_POST["nombre"] ?? "";
 $tipo = $_POST["tipo"] ?? "";
 $descripcion = $_POST["descripcion"] ?? "";
 
+// Instancia la BD y el Admin
+$db = new MyDatabase();
+$admin = new Admin($db->getConection());
+
 $errores = [];
+
+// Obtener tipos de Pokemons
+$tiposPokemon = $admin->obtenerTiposPokemon();
 
 // Verifica si el metodo es POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Instancia la BD y el Admin
-    $db = new MyDatabase();
-    $admin = new Admin($db->getConection());
 
     $validadorDeFormulario = new ValidacionFormulario();
     $errores = $validadorDeFormulario->obtenerErrores($_POST, $_FILES["imagen"]["error"]);;
@@ -45,87 +57,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Guarda la imagen en la carpeta /img, y guarda la informacion del Pokemon en la BD
             if (move_uploaded_file($imagenTmp, $directorioImagenes)) {
-                $pokemon = new Pokemon($numeroIdentificador, $nombre, $tipo, $descripcion, $nombreImagen);
+                $pokemon = new Pokemon($numeroIdentificador, $nombre, $descripcion, $nombreImagen);
 
+                $admin->agregarPokemon($pokemon, $tipo);
 
-                $admin->agregarPokemon($pokemon);
+                header("Location: ../index.php");
+            } else {
+                Mensaje::guardar("Error al subir imagen", "danger");
+                header("Location: ../index.php");
             }
+
+
         }
     }
+
 }
+
 
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Pokémon</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #f0f0f0; /* Un fondo grisáceo suave */
-        }
 
-        .pokemon-form-container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            margin-top: 30px;
-        }
-
-        .pokemon-header {
-            color: #ffcb05; /* Amarillo Pikachu */
-            text-shadow: 2px 2px #3b4cca; /* Azul oscuro Pokémon */
-            margin-bottom: 30px;
-        }
-
-        .form-group label {
-            color: #3b4cca; /* Azul oscuro Pokémon */
-            font-weight: bold;
-        }
-
-        .form-control {
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .form-control:focus {
-            border-color: #ffcb05; /* Amarillo Pikachu al enfocar */
-            box-shadow: 0 0 0 0.2rem rgba(255, 203, 5, 0.25);
-        }
-
-        .btn-primary {
-            background-color: #4CAF50; /* Verde tipo Planta */
-            border-color: #4CAF50;
-            color: white;
-            font-weight: bold;
-            border-radius: 5px;
-            padding: 10px 20px;
-        }
-
-        .btn-primary:hover {
-            background-color: #45a049;
-            border-color: #45a049;
-        }
-
-        .form-group select {
-            appearance: none; /* Elimina la apariencia predeterminada del select */
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background-image: url('data:image/svg+xml;utf8,<svg fill="%233b4cca" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
-            background-repeat: no-repeat;
-            background-position-x: 95%;
-            background-position-y: 50%;
-            padding-right: 25px;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
+<div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-md-8 pokemon-form-container">
             <h1 class="pokemon-header text-center">¡Crea un Nuevo Pokémon!</h1>
@@ -154,12 +106,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <div class="form-group">
                     <label for="tipo">Tipo de Pokémon:</label>
-                    <select class="form-control" id="tipo" name="tipo">
-                        <option value="hierba">Hierba</option>
-                        <option value="fuego">Fuego</option>
-                        <option value="agua">Agua</option>
-                        <option value="eléctrico">Eléctrico</option>
-                    </select>
+                    <div>
+                        <?php foreach ($tiposPokemon as $tipo) { ?>
+                            <label class="text-black fw-normal">
+                                <input type="checkbox" value="<?php echo $tipo["id"]; ?>"
+                                       name="tipo[]"
+                                    <?php echo (isset($_POST["tipo"]) && in_array($tipo["nombre"], $_POST["tipo"])) ? 'checked' : ''; ?>>
+                                <?php echo $tipo["nombre"]; ?>
+                            </label>
+                        <?php } ?>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -179,8 +135,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+<?php
+
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/footer.php';
+
+?>
+

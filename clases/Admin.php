@@ -1,5 +1,7 @@
 <?php
 
+require_once $_SERVER['DOCUMENT_ROOT'] . "/Pokedex/clases/Mensaje.php";
+
 class Admin
 {
 
@@ -11,22 +13,37 @@ class Admin
     }
 
     // AGREGA
-    public function agregarPokemon(Pokemon $pokemon)
+    public function agregarPokemon(Pokemon $pokemon, $tipos)
     {
 
-        $query = "INSERT INTO pokemon (numero_identificador, nombre, tipo, descripcion, imagen) VALUES (?, ?, ?, ?, ?)";
-
+        // Agrega la información a la tabla Pokemon
+        $query = "INSERT INTO pokemon (numero_identificador, nombre, descripcion, imagen) VALUES (?, ?, ?, ?)";
         // Preparo la consulta para errores de inyecciones sql we
         $inyeccion = $this->conexion->prepare($query);
-        $inyeccion->bind_param("issss", $pokemon->numero_identificador, $pokemon->nombre, $pokemon->tipo, $pokemon->descripcion, $pokemon->imagen);
+        $inyeccion->bind_param("isss", $pokemon->numero_identificador, $pokemon->nombre, $pokemon->descripcion, $pokemon->imagen);
 
-
-        if ($inyeccion->execute()) {
-            return "Pokemon agregado correctamente";
-        } else {
-            return "Error al agregar Pókemon";
+        if (!$inyeccion->execute()) {
+            Mensaje::guardar("Error al agregar el Pókemon", "danger");
+            return false;
         }
 
+        // Agrega la información a la tabla pokemon_tipo (N a N)
+        $query2 = "INSERT INTO pokemon_tipo (pokemon_id, tipo_id) VALUES (?, ?)";
+        $inyeccion2 = $this->conexion->prepare($query2);
+
+        foreach ($tipos as $tipo) {
+            if (!empty($tipo)) {
+                // Creo variables porque no me permite pasarla por valor sino por referencia
+                $pokemonId = intval($pokemon->numero_identificador);
+                $tipoId = intval($tipo);
+                $inyeccion2->bind_param("ii", $pokemonId, $tipoId);
+                if (!$inyeccion2->execute()) {
+                    Mensaje::guardar("Error al agregar el Tipo al Pokemon", "danger");
+                    return false;
+                }
+            }
+        }
+        Mensaje::guardar("Pókemon agregado correctamente", "success");
     }
 
     // OBTIENE
@@ -42,54 +59,80 @@ class Admin
         return $pokemonObtenido->fetch_assoc();
     }
 
+    public function obtenerTiposPokemon()
+    {
+        $query = "SELECT * FROM tipo";
+        $inyeccion = $this->conexion->prepare($query);
+        $inyeccion->execute();
+        $pokemonTipos = $inyeccion->get_result();
+        return $pokemonTipos;
+    }
+
+    //Metodo para iterar en actualizar.php
+    public function obtenerTiposDeUnPokemonIndividual($idPokemon)
+    {
+        $query = "SELECT t.nombre AS tipo_nombre, t.id AS tipo_id 
+                  FROM tipo t
+                  JOIN pokemon_tipo pt ON pt.tipo_id = t.id
+                  JOIN pokemon p ON p.numero_identificador = pt.pokemon_id
+                  WHERE p.id = ?";
+
+        $inyeccion = $this->conexion->prepare($query);
+        $inyeccion->bind_param("i", $idPokemon);
+        $inyeccion->execute();
+        $pokemonObtenido = $inyeccion->get_result();
+        return $pokemonObtenido;
+    }
+
     // ACTUALIZA
     public function actualizarPokemon($id, $pokemonActualizado, $imagenNueva)
     {
         $numeroIdentificadorDB = intval($pokemonActualizado["numeroIdentificador"] ?? "");
         $nombreDB = $pokemonActualizado["nombre"] ?? "";
-        $tipoDB = $pokemonActualizado["tipo"] ?? "";
         $descripcionDB = $pokemonActualizado["descripcion"] ?? "";
         $imagenDB = $pokemonActualizado["imagen"] ?? "";
 
-//        echo "<pre>";
-//        var_dump($pokemonActualizado);
-//        var_dump($id);
-//        var_dump($imagenNueva);
-//        echo "</pre>";
+        // Paso 1: Extraer los id de los tipos nuevos
+        $tiposNuevos = $pokemonActualizado['tipo']; // array con ids de tipo nuevos
 
-//        array(5) {
-//        ["numeroIdentificador"]=>
-//  string(1) "2"
-//        ["nombre"]=>
-//  string(10) "Ivysaur AC"
-//        ["tipo"]=>
-//  string(6) "hierba"
-//        ["descripcion"]=>
-//  string(27) "La evolución de Bulbasaur."
-//        ["imagen"]=>
-//  string(11) "ivysaur.png"
-//}
-//int(2)
-//NULL
+        // Paso 2: Obtener los tipos actuales desde la base de datos
+        $queryTiposActuales = "SELECT tipo_id FROM pokemon_tipo WHERE pokemon_id = ?";
+        $stmtTiposActuales = $this->conexion->prepare($queryTiposActuales);
+        $stmtTiposActuales->bind_param("i", $numeroIdentificadorDB);
+        $stmtTiposActuales->execute();
+        $resultTipos = $stmtTiposActuales->get_result();
 
-//        array(5) {
-//        ["numeroIdentificador"]=>
-//  string(2) "10"
-//        ["nombre"]=>
-//  string(9) "Sergio AC"
-//        ["tipo"]=>
-//  string(4) "agua"
-//        ["descripcion"]=>
-//  string(14) "Sergio on Fire"
-//        ["imagen"]=>
-//  string(36) "d1f497d4a80c4a34c6f0ded7db19535a.jpg"
-//}
-//int(10)
-//NULL
+        $tiposActuales = [];
+        while ($fila = $resultTipos->fetch_assoc()) {
+            $tiposActuales[] = $fila['tipo_id'];
+        }
+
+        // Paso 3: Comparar tipos actuales vs nuevos
+        sort($tiposActuales);
+        $tiposNuevosFiltrados = array_filter($tiposNuevos, fn($id) => !empty($id));
+        sort($tiposNuevosFiltrados);
+
+        if ($tiposActuales !== $tiposNuevosFiltrados) {
+            // Paso 4: Actualizar si hay al menos 1 tipo diferente
+            // Primero borramos los tipos actuales
+            $queryDelete = "DELETE FROM pokemon_tipo WHERE pokemon_id = ?";
+            $stmtDelete = $this->conexion->prepare($queryDelete);
+            $stmtDelete->bind_param("i", $numeroIdentificadorDB);
+            $stmtDelete->execute();
+
+            // Insertamos los nuevos
+            $queryInsert = "INSERT INTO pokemon_tipo (pokemon_id, tipo_id) VALUES (?, ?)";
+            $stmtInsert = $this->conexion->prepare($queryInsert);
+            foreach ($tiposNuevosFiltrados as $tipoId) {
+                $tipoIdInt = intval($tipoId);
+                $stmtInsert->bind_param("ii", $numeroIdentificadorDB, $tipoIdInt);
+                $stmtInsert->execute();
+            }
+        }
+
+
 
         if ($imagenNueva != null) {
-//            echo "Borro la imagen de la carpeta, genero un nuevo nombre, guardo la imagen en la carpeta y lo subo a la BD";
-
             // Borra la imagen de la carpeta img
             if (file_exists("../img/" . $imagenDB)) {
                 unlink("../img/" . $imagenDB);
@@ -110,30 +153,37 @@ class Admin
         $query = "UPDATE pokemon SET
                   numero_identificador = ?,
                   nombre = ?,
-                  tipo = ?,
                   descripcion = ?,
                   imagen = ?
                   WHERE id = ?";
 
         $inyeccion = $this->conexion->prepare($query);
-        $inyeccion->bind_param("sssssi",
+        $inyeccion->bind_param("ssssi",
             $numeroIdentificadorDB,
             $nombreDB,
-            $tipoDB,
             $descripcionDB,
             $imagenDB,
             $id
         );
 
         if ($inyeccion->execute()) {
-            return "Pokemon actualizado correctamente";
+            Mensaje::guardar("Pokemon actualizado correctamente", "success");
+            return true;
         } else {
-            return "Error al evolucionar el Pokemon :(: " . $inyeccion->error;
+            Mensaje::guardar("Error al evolucionar el Pokemon :(: " . $inyeccion->error, "danger");
+            return false;
         }
     }
 
     public function eliminarPokemon($id)
     {
+
+        $pokemonObtenido = $this->obtenerPokemon($id);
+
+        $queryNaN = "DELETE FROM pokemon_tipo WHERE pokemon_id = ?";
+        $inyeccionNaN = $this->conexion->prepare($queryNaN);
+        $inyeccionNaN->bind_param("i", $pokemonObtenido['numero_identificador']);
+        $inyeccionNaN->execute();
 
         $query = "DELETE FROM pokemon WHERE id = ?";
 
