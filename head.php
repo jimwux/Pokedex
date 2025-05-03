@@ -13,5 +13,5 @@
     <link rel="stylesheet" href="/Pokemon/pokedexStyle2.css">
     <link rel="stylesheet" href="/Pokedex/styles.css">
 </head>
-<body>
+<body class="pt-4">
 
