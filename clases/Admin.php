@@ -131,7 +131,6 @@ class Admin
         }
 
 
-
         if ($imagenNueva != null) {
             // Borra la imagen de la carpeta img
             if (file_exists("../img/" . $imagenDB)) {
@@ -174,28 +173,53 @@ class Admin
             return false;
         }
     }
+//
+//    public function eliminarPokemon($id)
+//    {
+//
+//        $pokemonObtenido = $this->obtenerPokemon($id);
+//
+//        $queryNaN = "DELETE FROM pokemon_tipo WHERE pokemon_id = ?";
+//        $inyeccionNaN = $this->conexion->prepare($queryNaN);
+//        $inyeccionNaN->bind_param("i", $pokemonObtenido['numero_identificador']);
+//        $inyeccionNaN->execute();
+//
+//        $query = "DELETE FROM pokemon WHERE id = ?";
+//
+//        $inyeccion = $this->conexion->prepare($query);
+//        $inyeccion->bind_param("i", $id);
+//
+//        if ($inyeccion->execute()) {
+//            Mensaje::guardar("Pokemon eliminado correctamente", "success");
+//            return true;
+//        } else {
+//            Mensaje::guardar("Error al eliminar la Pókemon");
+//            return false;
+//        }
+//
+//    }
+
 
     public function eliminarPokemon($id)
     {
-
         $pokemonObtenido = $this->obtenerPokemon($id);
 
         $queryNaN = "DELETE FROM pokemon_tipo WHERE pokemon_id = ?";
         $inyeccionNaN = $this->conexion->prepare($queryNaN);
         $inyeccionNaN->bind_param("i", $pokemonObtenido['numero_identificador']);
-        $inyeccionNaN->execute();
+        if (!$inyeccionNaN->execute()) {
+            Mensaje::guardar("Error al eliminar los tipos del Pokémon.", "danger");
+            return false;
+        }
 
         $query = "DELETE FROM pokemon WHERE id = ?";
-
         $inyeccion = $this->conexion->prepare($query);
         $inyeccion->bind_param("i", $id);
 
         if ($inyeccion->execute()) {
-            return "Pokemon eliminado correctamente";
+            return true;
         } else {
-            return "Error al eliminar la Pókemon";
+            return false;
         }
-
     }
-
 }
