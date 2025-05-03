@@ -25,7 +25,7 @@ $tipos = $db->query($sqlTipos);
 
 <section class="py-3 py-md-5 py-xl-8 tamanio-pantalla" id="vista-detalle">
 
-    <a class="btn btn-secondary mt-3 ms-4 mb-2" href="./index.php">❮ Volver atrás</a>
+    <a class="btn btn-secondary mt-3 ms-4 mb-2 rounded-pill shadow-sm" href="./index.php">❮ Volver atrás</a>
 
     <div class="container mt-5">
         <?php if ($pokemon): ?>
@@ -43,7 +43,7 @@ $tipos = $db->query($sqlTipos);
                         </span>
                         <h2 class="mb-4 fw-bold"><?= htmlspecialchars($pokemon['nombre']) ?></h2>
 
-                        <h5 class="text-muted">Descripción</h5>
+                        <h5 class="text-muted">Descripción:</h5>
                         <p><?= htmlspecialchars($pokemon['descripcion']) ?></p>
 
                         <h5 class="mt-4 text-muted">Tipo/s:</h5>

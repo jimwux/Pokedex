@@ -4,10 +4,30 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/database/MyDatabase.php';
 $db = new MyDatabase();
 $busqueda = '';
 $pokemones = [];
+$tipo_id = isset($_GET['tipo_id']) ? $_GET['tipo_id'] : '';
 
 if (isset($_GET['busqueda'])) {
     $busqueda = $_GET['busqueda'];
     $query = "SELECT * FROM pokemon WHERE nombre LIKE '%$busqueda%' OR numero_identificador = '$busqueda'";
+} else {
+    $query = "SELECT * FROM pokemon";
+}
+
+if ($busqueda != '' || $tipo_id != '') {
+    $query = "SELECT DISTINCT p.* FROM pokemon p 
+              LEFT JOIN pokemon_tipo pt ON p.id = pt.pokemon_id ";
+
+    $where = [];
+
+    if ($busqueda != '') {
+        $where[] = "(p.nombre LIKE '%$busqueda%' OR p.numero_identificador = '$busqueda')";
+    }
+
+    if ($tipo_id != '') {
+        $where[] = "pt.tipo_id = '$tipo_id'";
+    }
+
+    $query .= "WHERE " . implode(" AND ", $where);
 } else {
     $query = "SELECT * FROM pokemon";
 }
@@ -31,23 +51,35 @@ $pokemones = $db->query($query);
 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
     <div class="container-fluid mb-4 px-5">
         <div style="display: flex; align-items: center; gap: 10px;" class="d-flex flex-column flex-md-row align-items-stretch gap-2">
-            <?php if (isset($_SESSION['usuario_id'])): ?>
-                <a href="./Admin/crear.php" class="agregar-pokemon btn btn-danger rounded-pill" style="min-width: 200px;">
-                    <i class="fas fa-plus me-2"></i> Agregar Pokémon
-                </a>
-            <?php endif; ?>
-            <form method="GET" action="index.php" style="flex-grow: 1;" class="flex-grow-1">
-                <div class="search-bar">
+
+            <form method="GET" action="index.php" style="flex-grow: 1;" class="flex-grow-1 d-flex gap-2 flex-column flex-md-row align-items-stretch">
+                <div class="search-bar flex-grow-1">
                     <div class="input-group">
-                        <input type="text" name="busqueda" class="form-control" placeholder="Buscar pokémon..."
-                               aria-label="Search" aria-describedby="search-addon"
-                               value="<?= htmlspecialchars($busqueda, ENT_QUOTES, 'UTF-8') ?>">
-                        <button class="btn btn-outline-secondary" type="submit" id="search-addon">
+                        <input type="text" name="busqueda" class="form-control" placeholder="Buscar pokémon por nombre o número identificador..."
+                            aria-label="Search" aria-describedby="search-addon"
+                            value="<?= htmlspecialchars($busqueda, ENT_QUOTES, 'UTF-8') ?>">
+                        <select name="tipo_id" class="form-select border-0 bg-light" style="max-width: 200px;">
+                            <option value="">Todos los tipos</option>
+                            <?php
+                            $tipos = $db->query("SELECT * FROM tipo");
+                            foreach ($tipos as $tipo) {
+                                $selected = (isset($_GET['tipo_id']) && $_GET['tipo_id'] == $tipo['id']) ? 'selected' : '';
+                                echo "<option value='{$tipo['id']}' $selected>{$tipo['nombre']}</option>";
+                            }
+                            ?>
+                        </select>
+                        <button class="btn btn-secondary" type="submit" id="search-addon">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
                 </div>
             </form>
+
+            <?php if (isset($_SESSION['usuario_id'])): ?>
+                <a href="./Admin/crear.php" class="agregar-pokemon btn btn-danger rounded-pill shadow-sm" style="min-width: 200px;">
+                    <i class="fas fa-plus me-2"></i> Agregar Pokémon
+                </a>
+            <?php endif; ?>
 
         </div>
     </div>
@@ -93,4 +125,14 @@ if ($pokemones && count($pokemones) > 0) {
 ?>
 </section>
 </main>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const tipoSelect = document.querySelector("select[name='tipo_id']");
+    const form = tipoSelect.closest("form");
+
+    tipoSelect.addEventListener("change", function () {
+        form.submit();
+    });
+});
+</script>
 <?php require $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/footer.php'; ?>
