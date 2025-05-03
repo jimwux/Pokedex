@@ -1,5 +1,8 @@
+<?php require $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/head.php'; ?>
+<?php require $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/navbar.php'; ?>
+
+
 <?php
-session_start();
 if (isset($_SESSION['usuario_id'])) {
     header("Location: index.php");
     exit;
@@ -30,9 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-<?php require $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/head.php'; ?>
-<?php require $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/navbar.php'; ?>
-
 <section class="py-3 py-md-5 py-xl-8 tamanio-pantalla session" id="login">
     <div class="container">
         <div class="row gy-4 align-items-center">
@@ -40,8 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="d-flex justify-content-center text-light">
                     <div class="col-12 col-xl-9">
                         <div class="logotipo">
-                            <img loading="lazy" src="img/assets/pokeball.png" width="140" height="140" alt="Pokeweb">
-                            <h1 class="display-1 m-4">PokeWeb</h1>
+                            <img loading="lazy" src="img/assets/pokeball.png" width="130" height="130" alt="Pokeweb">
+                            <h1 class="display-3 m-4">PokeWeb</h1>
                         </div>
                         <hr class="border-primary-subtle mb-4">
                         <h2 class="h1 mb-4">Unite a miles de entrenadores en su aventura</h2>

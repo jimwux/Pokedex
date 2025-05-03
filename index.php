@@ -55,8 +55,13 @@ $pokemones = $db->query($query);
 
 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
     <div class="container-fluid mb-4 px-5">
-        <div style="display: flex; align-items: center; gap: 10px;" class="d-flex flex-column flex-md-row align-items-stretch gap-2">
+        <div style="display: flex; align-items: center;" class="d-flex flex-column flex-md-row align-items-stretch gap-4">
 
+            <?php if (isset($_SESSION['usuario_id'])): ?>
+                <a href="./Admin/crear.php" class="agregar-pokemon btn btn-danger rounded-pill shadow-sm" style="min-width: 200px;">
+                    <i class="fas fa-plus me-2"></i> Agregar Pokémon
+                </a>
+            <?php endif; ?>
             <form method="GET" action="index.php" style="flex-grow: 1;" class="flex-grow-1 d-flex gap-2 flex-column flex-md-row align-items-stretch">
                 <div class="search-bar flex-grow-1">
                     <div class="input-group">
@@ -80,11 +85,6 @@ $pokemones = $db->query($query);
                 </div>
             </form>
 
-            <?php if (isset($_SESSION['usuario_id'])): ?>
-                <a href="./Admin/crear.php" class="agregar-pokemon btn btn-danger rounded-pill shadow-sm" style="min-width: 200px;">
-                    <i class="fas fa-plus me-2"></i> Agregar Pokémon
-                </a>
-            <?php endif; ?>
 
         </div>
     </div>
