@@ -92,9 +92,47 @@ class Admin
         $descripcionDB = $pokemonActualizado["descripcion"] ?? "";
         $imagenDB = $pokemonActualizado["imagen"] ?? "";
 
-        if ($imagenNueva != null) {
-//            echo "Borro la imagen de la carpeta, genero un nuevo nombre, guardo la imagen en la carpeta y lo subo a la BD";
+        // Paso 1: Extraer los id de los tipos nuevos
+        $tiposNuevos = $pokemonActualizado['tipo']; // array con ids de tipo nuevos
 
+        // Paso 2: Obtener los tipos actuales desde la base de datos
+        $queryTiposActuales = "SELECT tipo_id FROM pokemon_tipo WHERE pokemon_id = ?";
+        $stmtTiposActuales = $this->conexion->prepare($queryTiposActuales);
+        $stmtTiposActuales->bind_param("i", $numeroIdentificadorDB);
+        $stmtTiposActuales->execute();
+        $resultTipos = $stmtTiposActuales->get_result();
+
+        $tiposActuales = [];
+        while ($fila = $resultTipos->fetch_assoc()) {
+            $tiposActuales[] = $fila['tipo_id'];
+        }
+
+        // Paso 3: Comparar tipos actuales vs nuevos
+        sort($tiposActuales);
+        $tiposNuevosFiltrados = array_filter($tiposNuevos, fn($id) => !empty($id));
+        sort($tiposNuevosFiltrados);
+
+        if ($tiposActuales !== $tiposNuevosFiltrados) {
+            // Paso 4: Actualizar si hay al menos 1 tipo diferente
+            // Primero borramos los tipos actuales
+            $queryDelete = "DELETE FROM pokemon_tipo WHERE pokemon_id = ?";
+            $stmtDelete = $this->conexion->prepare($queryDelete);
+            $stmtDelete->bind_param("i", $numeroIdentificadorDB);
+            $stmtDelete->execute();
+
+            // Insertamos los nuevos
+            $queryInsert = "INSERT INTO pokemon_tipo (pokemon_id, tipo_id) VALUES (?, ?)";
+            $stmtInsert = $this->conexion->prepare($queryInsert);
+            foreach ($tiposNuevosFiltrados as $tipoId) {
+                $tipoIdInt = intval($tipoId);
+                $stmtInsert->bind_param("ii", $numeroIdentificadorDB, $tipoIdInt);
+                $stmtInsert->execute();
+            }
+        }
+
+
+
+        if ($imagenNueva != null) {
             // Borra la imagen de la carpeta img
             if (file_exists("../img/" . $imagenDB)) {
                 unlink("../img/" . $imagenDB);
@@ -128,13 +166,6 @@ class Admin
             $id
         );
 
-        // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        // FALTA ACTUALIZAR LA TABLA N A N EN CASO DE QUE SE CAMBIE, HACER LA VERIFICACION Y GUARDARLO EN LA BD
-        // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        $queryTipos = "UPDATE pokemon_tipo pt
-                       JOIN pokemon p ON p.numero_identificador = pt.pokemon_id 
-                        ";
-
         if ($inyeccion->execute()) {
             Mensaje::guardar("Pokemon actualizado correctamente", "success");
             return true;
@@ -147,17 +178,22 @@ class Admin
     public function eliminarPokemon($id)
     {
 
+        $pokemonObtenido = $this->obtenerPokemon($id);
+
+        $queryNaN = "DELETE FROM pokemon_tipo WHERE pokemon_id = ?";
+        $inyeccionNaN = $this->conexion->prepare($queryNaN);
+        $inyeccionNaN->bind_param("i", $pokemonObtenido['numero_identificador']);
+        $inyeccionNaN->execute();
+
         $query = "DELETE FROM pokemon WHERE id = ?";
 
         $inyeccion = $this->conexion->prepare($query);
         $inyeccion->bind_param("i", $id);
 
         if ($inyeccion->execute()) {
-            Mensaje::guardar("Pokemon eliminado correctamente", "success");
-            return true;
+            return "Pokemon eliminado correctamente";
         } else {
-            Mensaje::guardar("Error al eliminar la Pókemon");
-            return false;
+            return "Error al eliminar la Pókemon";
         }
 
     }

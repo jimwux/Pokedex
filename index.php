@@ -2,10 +2,6 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/database/MyDatabase.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/clases/Mensaje.php';
 
-if(session_status() == PHP_SESSION_NONE){
-    session_start();
-}
-
 $db = new MyDatabase();
 $busqueda = '';
 $pokemones = [];
@@ -24,7 +20,7 @@ $pokemones = $db->query($query);
 <?php require $_SERVER['DOCUMENT_ROOT'] .  '/Pokedex/navbar.php'; ?>
 
 <!-- Dump de la sesión para ver contenido -->
-<?php var_dump($_SESSION); ?>
+<?php //var_dump($_SESSION); ?>
 <main class="bg-light">
 <section class="pt-3 pt-md-5 pt-xl-8" id="listado">
 

@@ -1,4 +1,6 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/head.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/navbar.php';
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/Pokedex/clases/Pokemon.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/Pokedex/database/MyDatabase.php";
@@ -6,8 +8,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/Pokedex/clases/Admin.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/Pokedex/clases/ValidacionFormulario.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/clases/Admin.php';
 
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: /Pokedex/index.php");
+    exit;
 }
 
 $numeroIdentificador = $_POST["numeroIdentificador"] ?? "";
@@ -70,8 +73,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/head.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/navbar.php';
 
 ?>
 
