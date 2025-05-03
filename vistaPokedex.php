@@ -11,11 +11,12 @@ $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $sql = "SELECT * FROM pokemon WHERE id = $id";
 $pokemon = $db->query($sql);
 $pokemon = $pokemon[0] ?? null; // obtiene el primer resultado
+$numeroIdentificador = $pokemon['numero_identificador'];
 
 // Consulta los tipos
 $sqlTipos = "SELECT t.nombre FROM tipo t
              JOIN pokemon_tipo pt ON pt.tipo_id = t.id
-             WHERE pt.pokemon_id = $id";
+             WHERE pt.pokemon_id = $numeroIdentificador";
 $tipos = $db->query($sqlTipos);
 ?>
 
