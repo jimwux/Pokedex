@@ -6,7 +6,7 @@ class MyDatabase
 
     public function __construct()
     {
-        $config = parse_ini_file("config.ini");
+        $config = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/Pokedex/database/config.ini");
         $this->conection = new MySQLi(
             $config['host'],
             $config['user'],

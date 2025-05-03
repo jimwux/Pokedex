@@ -1,5 +1,5 @@
 <?php
-include './database/MyDatabase.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/database/MyDatabase.php';
 
 class Usuario
 {
