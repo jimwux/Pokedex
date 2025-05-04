@@ -16,7 +16,7 @@ if (isset($_GET['busqueda'])) {
 
 if ($busqueda != '' || $tipo_id != '') {
     $query = "SELECT DISTINCT p.* FROM pokemon p 
-              LEFT JOIN pokemon_tipo pt ON p.id = pt.pokemon_id ";
+              LEFT JOIN pokemon_tipo pt ON p.numero_identificador = pt.pokemon_id ";
 
     $where = [];
 
