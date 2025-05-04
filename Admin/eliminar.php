@@ -1,41 +1,51 @@
 <?php
-
+session_start();
 require_once "../database/MyDatabase.php";
 require_once "../clases/Admin.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/Pokedex/clases/Mensaje.php";
 
-if (!isset($_SESSION['usuario_id'])) {
-    header("Location: /Pokedex/index.php");
-    exit;
-}
+//if (!isset($_SESSION['usuario_id'])) {
+//    header("Location: /Pokedex/index.php");
+//    exit;
+//}
+
+$db = new MyDatabase();
+$admin = new Admin($db->getConection());
 
 if (isset($_GET["id"])) {
-    $db = new MyDatabase();
-    $admin = new Admin($db->getConection());
-
     $id = filter_var($_GET["id"], FILTER_VALIDATE_INT);
 
     if (!$id) {
+        Mensaje::guardar("El ID del Pokémon no es válido.", "danger");
         header("location: ../index.php");
-        return "Id incorrecto";
+        exit;
     }
 
     $pokemonExistente = $admin->obtenerPokemon($id);
     if (!$pokemonExistente) {
+        Mensaje::guardar("No existe el Pokémon que intentas eliminar.", "warning");
         header("location: ../index.php");
-        return "No existe el Pókemon a eliminar";
+        exit;
     }
 
     $resultado = $admin->eliminarPokemon($id);
-    // En caso de que se elimine el Pokemon correctamente se elimina la imagen de la carpeta tambien
-    if($resultado == "Pokemon eliminado correctamente"){
+
+    if ($resultado) { // Si la eliminación en la base de datos fue exitosa
         $imagenPokemon = $pokemonExistente["imagen"];
-        $rutaPokemon = "../img/" .  $imagenPokemon;
-        unlink($rutaPokemon);
-        header("location: ../index.php");
+        $rutaPokemon = "../img/" . $imagenPokemon;
+        if (file_exists($rutaPokemon)) {
+            unlink($rutaPokemon);
+        }
+        Mensaje::guardar("Pokémon eliminado correctamente.", "success");
+    } else {
+        Mensaje::guardar("Error al eliminar el Pokémon de la base de datos: ", "danger");
     }
 
-    Mensaje::guardar($resultado, "success");
-    return true; // Retorna un mensaje, ya sea exitoso o de error
+    header("location: ../index.php");
+    exit;
 
+} else {
+    Mensaje::guardar("No se proporcionó un ID de Pokémon para eliminar.", "warning");
+    header("location: ../index.php");
+    exit;
 }

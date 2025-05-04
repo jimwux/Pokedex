@@ -28,7 +28,7 @@ class Mensaje
                     break;
             }
 
-            echo '<div class="alert ' . $claseAlerta . ' alert-dismissible fade show" role="alert">';
+            echo '<div class="alert ' . $claseAlerta . ' alert-dismissible fade show mx-5" role="alert">';
             echo $mensaje;
             echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
             echo '</div>';

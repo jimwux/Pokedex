@@ -98,7 +98,7 @@ if ($pokemones && count($pokemones) > 0) {
     foreach ($pokemones as $pokemon) {
         echo "<div class='col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-5'>";
         echo "<a href='./vistaPokedex.php?id={$pokemon['id']}' class='text-decoration-none text-dark'>"; // Enlace que envuelve la tarjeta
-        echo "<div class='pokemon-card text-center p-4 pt-5 h-100 bg-white rounded-4 position-relative'>";
+        echo "<div class='pokemon-card text-center p-4 pt-5 h-100 bg-white rounded-4 position-relative d-flex flex-column justify-content-between'>";
         echo "<span class='badge bg-danger rounded-pill text-white id-circle py-3 px-4' title='ID del Pokémon'>N.º {$pokemon['numero_identificador']}</span>";
         echo "<div class='pokemon-img-wrapper mb-2'>";
         echo "<img src='img/{$pokemon['imagen']}' alt='{$pokemon['nombre']}' class='img-fluid'>";
@@ -106,13 +106,15 @@ if ($pokemones && count($pokemones) > 0) {
         echo "<h4 class='nombre-pokemon-card'>{$pokemon['nombre']}</h4><br>";
         echo "</a>";
         if (isset($_SESSION['usuario_id'])) {
-            echo "<a href='./Admin/actualizar.php?id={$pokemon['id']}' class='btn btn-secondary btn-block col-md-12 m-1'>
-               <i class='fas fa-pen me-1'></i> Modificar
-            </a>";
+            echo "<div class='mt-auto'>"; // Esto empuja los botones al final
+                echo "<a href='./Admin/actualizar.php?id={$pokemon['id']}' class='btn btn-secondary btn-block col-md-12 m-1'>
+                   <i class='fas fa-pen me-1'></i> Modificar
+                </a>";
 
-            echo "<a href= './Admin/eliminar.php?id={$pokemon['id']}' class='btn btn-danger btn-block col-md-12 m-1'>
-               <i class='fas fa-trash me-1'></i> Eliminar
-            </a>";
+                echo "<a href= './Admin/eliminar.php?id={$pokemon['id']}' class='btn btn-danger btn-block col-md-12 m-1'>
+                   <i class='fas fa-trash me-1'></i> Eliminar
+                </a>";
+            echo "</div>";
         }
         echo "  </div>";
         echo "</div>";
