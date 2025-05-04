@@ -76,8 +76,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 ?>
 
+<div class="container-fluid my-5">
 
-<div class="container my-5">
+    <a class="btn btn-secondary mt-3 ms-4 mb-2 rounded-pill shadow-sm" href="../index.php"><i class="fas fa-arrow-left me-2"></i> Volver atrás</a>
+
     <div class="row justify-content-center">
         <div class="col-md-8 pokemon-form-container">
             <h1 class="pokemon-header text-center">¡Crea un Nuevo Pokémon!</h1>
@@ -106,14 +108,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <div class="form-group">
                     <label for="tipo">Tipo de Pokémon:</label>
-                    <div>
+                    <div class="row">
                         <?php foreach ($tiposPokemon as $tipo) { ?>
+                        <div class="col-md-4">
                             <label class="text-black fw-normal">
                                 <input type="checkbox" value="<?php echo $tipo["id"]; ?>"
                                        name="tipo[]"
                                     <?php echo (isset($_POST["tipo"]) && in_array($tipo["nombre"], $_POST["tipo"])) ? 'checked' : ''; ?>>
                                 <?php echo $tipo["nombre"]; ?>
                             </label>
+                        </div>
                         <?php } ?>
                     </div>
                 </div>
@@ -126,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <div class="form-group">
                     <label for="imagen">Imagen:</label>
-                    <input type="file" class="form-control-file" id="imagen" name="imagen">
+                    <input type="file" class="form-control" id="imagen" name="imagen">
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-block">¡Atrapar Nuevo Pokémon!</button>

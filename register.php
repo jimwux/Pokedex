@@ -57,8 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="d-flex justify-content-center text-light">
                     <div class="col-12 col-xl-9">
                         <div class="logotipo">
-                            <img loading="lazy" src="img/assets/pokeball.png" width="140" height="140" alt="Pokeweb">
-                            <h1 class="display-1 m-4">PokeWeb</h1>
+                            <img loading="lazy" src="img/assets/pokeball.png" width="130" height="130" alt="Pokeweb">
+                            <h1 class="display-3 m-4">PokeWeb</h1>
                         </div>
                         <hr class="border-primary-subtle mb-4">
                         <h2 class="h1 mb-4">Unite a miles de entrenadores en su aventura</h2>
@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="terms" id="terms" required>
                                         <label class="form-check-label text-secondary" for="terms">
-                                            Acepto los <a href="#!">términos y condiciones</a>
+                                            Acepto los términos y condiciones
                                         </label>
                                     </div>
                                 </div>

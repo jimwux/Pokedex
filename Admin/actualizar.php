@@ -88,7 +88,10 @@ if (isset($_GET["id"])) {
 ?>
 
 
-    <div class="container my-5">
+    <div class="container-fluid my-5">
+
+        <a class="btn btn-secondary mt-3 ms-4 mb-2 rounded-pill shadow-sm" href="../index.php"><i class="fas fa-arrow-left me-2"></i> Volver atrás</a>
+
         <div class="row justify-content-center">
             <div class="col-md-8 pokemon-form-container">
                 <h1 class="pokemon-header text-center">¡Evolucionar Pokémon!</h1>
@@ -116,14 +119,16 @@ if (isset($_GET["id"])) {
 
                     <div class="form-group">
                         <label for="tipo">Tipo de Pokémon:</label>
-                        <div>
+                        <div class="row">
                             <?php foreach ($tiposPokemon as $tipo) { ?>
+                            <div class="col-md-4">
                                 <label class="text-black fw-normal">
                                     <input type="checkbox" value="<?php echo $tipo["id"]; ?>"
                                            name="tipo[]"
                                         <?php echo in_array($tipo["id"], $tiposSeleccionados) ? "checked" : ""; ?> >
                                     <?php echo $tipo["nombre"]; ?>
-                                </label>
+                                </label><br>
+                            </div>
                             <?php } ?>
                         </div>
                     </div>
@@ -134,13 +139,13 @@ if (isset($_GET["id"])) {
                                   placeholder="Ingrese la descripción del Pokémon"><?php echo htmlspecialchars($descripcion); ?></textarea>
                     </div>
 
-                    <div class="form-group container">
+                    <div class="form-group">
                         <label for="imagen">Imagen:</label>
-                        <input type="file" class="form-control-file" id="imagen" name="imagen">
+                        <input type="file" class="form-control" id="imagen" name="imagen">
                         <?php if (!empty($imagen)): ?>
-                            <div style="display:flex; justify-content: center">
+                            <div style="display:flex; justify-content: center" class="my-4">
                                 <img src="<?php echo "../img/" . htmlspecialchars($imagen); ?>" alt="Imagen Pókemon"
-                                     style="width: 50%;" ">
+                                     style="width: 30%;" ">
                             </div>
 
                         <?php endif; ?>

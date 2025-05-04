@@ -22,7 +22,7 @@ $tipos = $db->query($sqlTipos);
 
 <section class="py-3 py-md-5 py-xl-8 tamanio-pantalla" id="vista-detalle">
 
-    <a class="btn btn-secondary mt-3 ms-4 mb-2 rounded-pill shadow-sm" href="./index.php">❮ Volver atrás</a>
+    <a class="btn btn-secondary mt-3 ms-4 mb-2 rounded-pill shadow-sm" href="./index.php"><i class="fas fa-arrow-left me-2"></i> Volver atrás</a>
 
     <div class="container mt-5">
         <?php if ($pokemon): ?>

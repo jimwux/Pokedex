@@ -39,9 +39,9 @@ $pokemones = $db->query($query);
 <?php require $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/head.php'; ?>
 <?php require $_SERVER['DOCUMENT_ROOT'] .  '/Pokedex/navbar.php'; ?>
 
-<!-- Dump de la sesión para ver contenido -->
-<?php //var_dump($_SESSION); ?>
-<main class="bg-light">
+
+<div class="cuerpo bg-light">
+<main>
 <section class="pt-3 pt-md-5 pt-xl-8" id="listado">
 
 
@@ -103,10 +103,10 @@ if ($pokemones && count($pokemones) > 0) {
         echo "<div class='pokemon-img-wrapper mb-2'>";
         echo "<img src='img/{$pokemon['imagen']}' alt='{$pokemon['nombre']}' class='img-fluid'>";
         echo "</div>";
+        echo "<div class='pt-auto'>"; // Esto empuja los botones al final
         echo "<h4 class='nombre-pokemon-card'>{$pokemon['nombre']}</h4><br>";
         echo "</a>";
         if (isset($_SESSION['usuario_id'])) {
-            echo "<div class='mt-auto'>"; // Esto empuja los botones al final
                 echo "<a href='./Admin/actualizar.php?id={$pokemon['id']}' class='btn btn-secondary btn-block col-md-12 m-1'>
                    <i class='fas fa-pen me-1'></i> Modificar
                 </a>";
@@ -114,9 +114,9 @@ if ($pokemones && count($pokemones) > 0) {
                 echo "<a href= './Admin/eliminar.php?id={$pokemon['id']}' class='btn btn-danger btn-block col-md-12 m-1'>
                    <i class='fas fa-trash me-1'></i> Eliminar
                 </a>";
-            echo "</div>";
         }
-        echo "  </div>";
+        echo "</div>";
+        echo "</div>";
         echo "</div>";
     }
     echo "</div>";
@@ -143,3 +143,4 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 <?php require $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/footer.php'; ?>
+</div>

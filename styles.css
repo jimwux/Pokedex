@@ -177,3 +177,9 @@ body {
     background-position-y: 50%;
     padding-right: 25px;
 }
+
+.cuerpo {
+    display: grid;
+    min-height: 100dvh;
+    grid-template-rows: auto 1fr auto;
+}

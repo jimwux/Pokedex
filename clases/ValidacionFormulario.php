@@ -18,8 +18,10 @@ class ValidacionFormulario
         $descripcion = $campos["descripcion"];
 
 
-        if ($numeroIdentificador == "") {
-            $errores[] = "El numero de identificador es obligatorio";
+        if ($numeroIdentificador === "") {
+            $errores[] = "El número de identificador es obligatorio";
+        } elseif (!ctype_digit($numeroIdentificador)) {
+            $errores[] = "El número de identificador debe ser un número entero positivo";
         }
 
         if ($nombre == "") {
