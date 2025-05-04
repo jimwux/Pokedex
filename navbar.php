@@ -1,7 +1,3 @@
-<?php
-session_start();
-?>
-
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm px-3 poke-nav bg-gris-oscuro">
     <div class="container-fluid">
         <a class="navbar-brand d-flex align-items-center gap-2" href="/Pokedex/index.php">

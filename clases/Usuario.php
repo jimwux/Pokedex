@@ -65,7 +65,7 @@ class Usuario
                 // Ahora se pasa el id del usuario correctamente al objeto Usuario
                 return new Usuario(
                     $usuario_data['id'],       // id autoincrementado
-                    $usuario_data['username'], // nombre
+                    $usuario_data['nombre'], // nombre
                     $usuario_data['email'],    // email
                     $usuario_data['password']  // password
                 );

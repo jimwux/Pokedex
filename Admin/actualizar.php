@@ -124,7 +124,7 @@ if (isset($_GET["id"])) {
                             <div class="col-md-4">
                                 <label class="text-black fw-normal">
                                     <input type="checkbox" value="<?php echo $tipo["id"]; ?>"
-                                           name="tipo[]"
+                                           name="tipo[]" class="me-2"
                                         <?php echo in_array($tipo["id"], $tiposSeleccionados) ? "checked" : ""; ?> >
                                     <?php echo $tipo["nombre"]; ?>
                                 </label><br>

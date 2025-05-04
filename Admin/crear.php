@@ -113,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="col-md-4">
                             <label class="text-black fw-normal">
                                 <input type="checkbox" value="<?php echo $tipo["id"]; ?>"
-                                       name="tipo[]"
+                                       name="tipo[]" class="me-2"
                                     <?php echo (isset($_POST["tipo"]) && in_array($tipo["nombre"], $_POST["tipo"])) ? 'checked' : ''; ?>>
                                 <?php echo $tipo["nombre"]; ?>
                             </label>
