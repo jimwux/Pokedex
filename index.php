@@ -34,6 +34,40 @@ if ($busqueda != '' || $tipo_id != '') {
 }
 
 $pokemones = $db->query($query);
+
+function mostrarPokemones($pokemones) {
+    if (!$pokemones || count($pokemones) === 0) return;
+
+    echo "<div class='container-fluid px-5 pt-4'>";
+    echo "<div class='row'>";
+    foreach ($pokemones as $pokemon) {
+        echo "<div class='col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-5'>";
+        echo "<a href='./vistaPokedex.php?id={$pokemon['id']}' class='text-decoration-none text-dark'>";
+        echo "<div class='pokemon-card text-center p-4 pt-5 h-100 bg-white rounded-4 position-relative d-flex flex-column justify-content-between'>";
+        echo "<span class='badge bg-danger rounded-pill text-white id-circle py-3 px-4' title='ID del Pokémon'>N.º {$pokemon['numero_identificador']}</span>";
+        echo "<div class='pokemon-img-wrapper mb-2'>";
+        echo "<img src='img/{$pokemon['imagen']}' alt='{$pokemon['nombre']}' class='img-fluid'>";
+        echo "</div>";
+        echo "<div class='pt-auto'>";
+        echo "<h4 class='nombre-pokemon-card'>{$pokemon['nombre']}</h4><br>";
+        echo "</a>";
+        if (isset($_SESSION['usuario_id'])) {
+            echo "<a href='./Admin/actualizar.php?id={$pokemon['id']}' class='btn btn-secondary btn-block col-md-12 m-1'>
+                    <i class='fas fa-pen me-1'></i> Modificar
+                </a>";
+
+            echo "<a href= './Admin/eliminar.php?id={$pokemon['id']}' class='btn btn-danger btn-block col-md-12 m-1'>
+                    <i class='fas fa-trash me-1'></i> Eliminar
+                </a>";
+        }
+        echo "</div>";
+        echo "</div>";
+        echo "</div>";
+    }
+    echo "</div>";
+    echo "</div>";
+}
+
 ?>
 
 <?php require $_SERVER['DOCUMENT_ROOT'] . '/Pokedex/head.php'; ?>
@@ -93,37 +127,13 @@ $pokemones = $db->query($query);
 <?php
 
 if ($pokemones && count($pokemones) > 0) {
-    echo "<div class='container-fluid px-5 pt-4'>";
-    echo "<div class='row'>";
-    foreach ($pokemones as $pokemon) {
-        echo "<div class='col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-5'>";
-        echo "<a href='./vistaPokedex.php?id={$pokemon['id']}' class='text-decoration-none text-dark'>"; // Enlace que envuelve la tarjeta
-        echo "<div class='pokemon-card text-center p-4 pt-5 h-100 bg-white rounded-4 position-relative d-flex flex-column justify-content-between'>";
-        echo "<span class='badge bg-danger rounded-pill text-white id-circle py-3 px-4' title='ID del Pokémon'>N.º {$pokemon['numero_identificador']}</span>";
-        echo "<div class='pokemon-img-wrapper mb-2'>";
-        echo "<img src='img/{$pokemon['imagen']}' alt='{$pokemon['nombre']}' class='img-fluid'>";
-        echo "</div>";
-        echo "<div class='pt-auto'>"; // Esto empuja los botones al final
-        echo "<h4 class='nombre-pokemon-card'>{$pokemon['nombre']}</h4><br>";
-        echo "</a>";
-        if (isset($_SESSION['usuario_id'])) {
-                echo "<a href='./Admin/actualizar.php?id={$pokemon['id']}' class='btn btn-secondary btn-block col-md-12 m-1'>
-                   <i class='fas fa-pen me-1'></i> Modificar
-                </a>";
-
-                echo "<a href= './Admin/eliminar.php?id={$pokemon['id']}' class='btn btn-danger btn-block col-md-12 m-1'>
-                   <i class='fas fa-trash me-1'></i> Eliminar
-                </a>";
-        }
-        echo "</div>";
-        echo "</div>";
-        echo "</div>";
-    }
-    echo "</div>";
-    echo "</div>";
+    mostrarPokemones($pokemones);
 } else {
     if ($busqueda != '') {
         echo "<div class='alert alert-danger mx-5' role='alert'>No se encontraron pokémon que coincidan en nombre o numero identificador con: <strong>'$busqueda'</strong>.</div>";
+        $query = "SELECT * FROM pokemon";
+        $pokemones = $db->query($query);
+        mostrarPokemones($pokemones);
     } else {
         echo "<div class='alert alert-danger mx-5' role='alert'>No hay pokémon registrados.</div>";
     }
